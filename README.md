@@ -1,0 +1,2 @@
+# jenkins-ansible
+vagrant up
