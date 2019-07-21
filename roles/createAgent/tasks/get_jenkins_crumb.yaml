@@ -1,0 +1,12 @@
+- name: Get Jenkins Crumb
+  uri:
+    url: http://{{ jenkins_host }}/crumbIssuer/api/json
+    method: GET
+    force_basic_auth: yes
+    return_content: yes
+    user: "{{ jenkins_user }}"
+    password: "{{ jenkins_password }}"
+  register: crumb
+
+- debug:
+    msg: "{{ crumb.json.crumb }}"

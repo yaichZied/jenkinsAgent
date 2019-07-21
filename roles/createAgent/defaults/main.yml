@@ -1,0 +1,11 @@
+---
+jenkins_host: '192.168.0.158:8080'
+jenkins_user: 'administrator'
+jenkins_password: 'password'
+
+jenkins_user_home: '/var/lib/jenkins'
+user_generate_ssh_key: False
+user_local_ssh_key_path: "/var/lib/jenkins/.ssh/id_rsa.pub"
+user_enable_passwordless_sudo: True
+
+user_local_private_ssh_key_path: "/var/lib/jenkins/.ssh/id_rsa"

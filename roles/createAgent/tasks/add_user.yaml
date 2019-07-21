@@ -1,0 +1,44 @@
+- name: Add the user 'jenkins'
+  user:
+    name: jenkins
+    group: wheel
+    home: "{{ jenkins_user_home }}"
+    generate_ssh_key: "{{ user_generate_ssh_key }}"
+
+- name: Slurp  public id_rsa file
+  slurp:
+    src: "{{ user_local_ssh_key_path }}"
+  register: slurpfile
+
+- name: "Set authorized_key to allow SSH key based logins"
+  authorized_key:
+    user: jenkins
+    key: "{{ slurpfile['content'] | b64decode }}"
+  when: user_local_ssh_key_path | default(False)
+
+- name: "Enable including files from sudoers.d/"
+  lineinfile:
+    path: "/etc/sudoers"
+    regexp: "^#includedir /etc/sudoers.d"
+    line: "#includedir /etc/sudoers.d"
+    state: "present"
+    backup: True
+  when: user_enable_passwordless_sudo
+  
+- name: Disable sudoers.d
+  lineinfile:
+    path: "/etc/sudoers"
+    regexp: "^#includedir /etc/sudoers.d"
+    line: "#includedir /etc/sudoers.d"
+    state: "absent"
+    backup: True
+  when: user_enable_passwordless_sudo == False  
+
+- name: "Enable passwordless sudo"
+  copy:
+    content: "%jenkins ALL=(ALL) NOPASSWD:ALL"
+    dest: "/etc/sudoers.d/jenkins"
+    owner: "root"
+    group: "root"
+    mode: "0440"
+  when: user_enable_passwordless_sudo

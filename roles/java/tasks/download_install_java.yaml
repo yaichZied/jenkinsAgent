@@ -1,0 +1,32 @@
+- name: Download JRE rpm package
+  become: yes
+  get_url:
+    url: "{{ java_rpm_package_url }}"
+    dest: "{{ java_package_download_path }}"
+
+- name: install Java rpm from a local file
+  become: yes
+  yum:
+    name: "/tmp/java.rpm"
+    state: present
+
+- name: Delete Java RPM file
+  file:
+    path: "{{ java_package_download_path }}"
+    state: absent
+
+- name: Fetch Java version
+  shell: java -version 2>&1 | grep version | awk '{print $3}' | sed 's/"//g'
+  register: java_version
+
+- name: Select latest installed Java JRE version
+  alternatives:
+    name: java
+    link: "/usr/java/jre{{ java_version.stdout }}-amd64/bin/java"
+    path: "/usr/java/jre{{ java_version.stdout }}-amd64/bin/java"
+
+- name: Add JAVA HOME evn variable
+  lineinfile:
+    path: /etc/environment
+    state: present
+    line: "JAVA_HOME=/usr/java/jre{{ java_version.stdout }}-amd64"

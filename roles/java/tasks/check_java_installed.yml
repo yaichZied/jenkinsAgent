@@ -1,0 +1,5 @@
+- name: Check if Java is installed
+  shell: which java
+  register: oracle_java_task_installed
+  changed_when: oracle_java_task_installed.rc != 0
+  failed_when: no

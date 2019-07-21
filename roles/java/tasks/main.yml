@@ -1,0 +1,6 @@
+- name: check host environment
+  include: check_java_installed.yml
+
+- name: Download & Install Java
+  include: download_install_java.yaml
+  when: oracle_java_task_installed.rc != 0

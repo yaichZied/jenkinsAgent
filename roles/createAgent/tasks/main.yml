@@ -1,0 +1,10 @@
+---
+- name: Create jenkins user if not exist
+  include: add_user.yaml
+
+- name: Get jenkins crumb
+  include: get_jenkins_crumb.yaml
+
+- name: Get jenkins crumb
+  include: add_jenkins_ssh_credential.yaml
+

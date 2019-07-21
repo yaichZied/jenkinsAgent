@@ -1,0 +1,6 @@
+---
+- name: Add agent
+  hosts: all
+  become: yes
+  roles: 
+    - createAgent
